@@ -1,4 +1,3 @@
-
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -92,14 +91,11 @@ public class Main {
     }
 
     static boolean checkFirstKBits(byte[] msgHash, byte[] nonce, int k) {
-        BigInteger bigIntegerMsgHash = new BigInteger(msgHash);
-        String binaryMsgHash = bigIntegerMsgHash.toString(2);
+        String binaryMsgHash = convertByteArrayToBinaryString(msgHash);
         System.out.println("1-> " + binaryMsgHash);
 
-        BigInteger bigIntegerNonce = new BigInteger(nonce);
-        String binaryNonce = bigIntegerNonce.toString(2);
-        System.out.println("2-> " + binaryMsgHash);
-
+        String binaryNonce = convertByteArrayToBinaryString(nonce);
+        System.out.println("2-> " + binaryNonce);
 
         for (int i = 0; i < k; i++) {
             if (binaryMsgHash.charAt(i) != '0' && binaryNonce.charAt(i) != '0') {
@@ -116,6 +112,14 @@ public class Main {
             s1 += " " + b1;
             System.out.println(s1);
         }
+    }
+
+    static String convertByteArrayToBinaryString(byte[] barr) {
+        StringBuilder binary = new StringBuilder();
+        for (byte b : barr){
+            binary.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
+        }
+        return binary.toString();
     }
 
     public static void foo( String s) {
