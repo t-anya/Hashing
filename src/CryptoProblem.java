@@ -1,4 +1,5 @@
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,9 +31,9 @@ public class CryptoProblem {
             System.out.println("Statistics for k = " + kArr[i]);
             ArrayList<Integer> list = res.get(i);
 
-            for (int val : list) {
-                System.out.print(val + " ");
-            }
+//            for (int val : list) {
+//                System.out.print(val + " ");
+//            }
             System.out.println();
             System.out.println("Average no. of tries = " + getAverage(list));
             System.out.println("Standard Deviation of tries = " + getStandardDeviation(list));
@@ -44,8 +45,8 @@ public class CryptoProblem {
         ArrayList<Integer> numTriesList = new ArrayList<>();
         //Run program 10 times
         for (int i = 0; i < 10; i++) {
-            System.out.println("********************************************************");
-            System.out.println("Iteration " + (i + 1) + " for k =" + k);
+//            System.out.println("********************************************************");
+//            System.out.println("Iteration " + (i + 1) + " for k =" + k);
             work(k, numTriesList);
         }
         res.add(numTriesList);
@@ -56,19 +57,33 @@ public class CryptoProblem {
         boolean flag = true;
         while (flag) {
             noOfTries++;
-            System.out.println("Try No.  " + noOfTries);
+            //System.out.println("Try No.  " + noOfTries);
             byte[] nonce = generateNonce();
             byte[] concatenatedByteArray = concatenate(msgBytes, nonce);
             byte[] hash = sha256(concatenatedByteArray);
             boolean res = checkFirstKBits(hash, k);
-            System.out.println("Result " + res);
+           // System.out.println("Result " + res);
             if (res) {
                 flag = false;
                 numTriesList.add(noOfTries);
+                printResults(hash,nonce,noOfTries);
             }
         }
 
     }
+
+    private static void printResults(byte[] hash, byte[] nonce, int noOfTries) {
+        toHexString(hash);
+        System.out.print(",");
+        toHexString(nonce);
+        System.out.print(","+noOfTries);
+        System.out.println();
+    }
+
+    public static void toHexString(byte[] byteArray) {
+        System.out.print(new BigInteger(1, byteArray).toString(16));
+    }
+
 
     public static byte[] concatenate(byte[]... arrays) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -106,7 +121,7 @@ public class CryptoProblem {
 
     static boolean checkFirstKBits(byte[] hash, int k) {
         String binaryMsgHash = convertByteArrayToBinaryString(hash);
-        System.out.println("1-> " + binaryMsgHash);
+        //System.out.println("1-> " + binaryMsgHash);
 
         for (int i = 0; i < k; i++) {
             if (binaryMsgHash.charAt(i) != '0') {
